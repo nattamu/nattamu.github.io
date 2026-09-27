@@ -45,7 +45,6 @@ window.PROJECTS = [
     image: "ux-playground/promjai/img/card-cover.webp",
     link: "ux-playground/promjai/",
     featured: true,
-    status: "in-progress",
   },
   {
     slug: "acoustic-aura",
@@ -134,7 +133,7 @@ window.PROJECTS = [
     year: "2026",
     tags: ["Fintech", "Payments", "Error States"],
     category: "product",
-    image: "",
+    image: "ux-playground/card-restrictions/img/card-cover.webp",
     link: "",
     status: "in-progress",
   },
