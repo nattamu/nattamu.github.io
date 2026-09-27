@@ -846,8 +846,16 @@ ul { margin: 0; padding: 0; list-style: none; }
   font-size: 13px;
   color: var(--muted);
 }
+/* From 768px: three columns, with the two outer ones always equal width,
+   so the social icons sit exactly in the centre however long the side texts are */
 @media (min-width: 768px) {
-  .footer-bar { flex-direction: row; justify-content: space-between; flex-wrap: wrap; }
+  .footer-bar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+  }
+  .footer-bar > :first-child { justify-self: start; text-align: left; }
+  .footer-bar > :last-child { justify-self: end; text-align: right; }
 }
 .status { display: inline-flex; align-items: center; gap: 8px; }
 .status::before {
