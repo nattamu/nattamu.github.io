@@ -60,8 +60,8 @@
       <div class="marquee" aria-hidden="true"><div class="marquee-track">${run}${run}</div></div>
       <footer class="footer">
         <div class="container">
-          <span class="eyebrow">Have a project in mind?</span><br />
-          <a class="footer-mail" href="mailto:${S.email}">${S.email} ${ICON.arrowUR}</a>
+          <span class="eyebrow">Getting in touch?</span><br />
+          <a class="footer-mail" href="mailto:${S.email}" title="${S.email}"><span class="footer-mail-text">${S.email}</span>${ICON.arrowUR}</a>
           <div class="footer-bar">
             <span class="status">Open to UX opportunities · ${S.location}</span>
             <div class="socials">
