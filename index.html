@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nattaporn Muhpayak · UX Designer</title>
+  <meta name="description" content="Nattaporn (Natty) Muhpayak, a research-led UX designer in Bangkok working on fintech and mobile payments." />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+</head>
+<body data-page="home" data-root="">
+  <main id="main">
+    <!-- Hero -->
+    <section class="hero">
+      <div>
+        <span class="eyebrow reveal">UX Portfolio ’26</span>
+        <h1 class="hero-name reveal" style="--d:.08s">Nattaporn <span class="last">Muhpayak</span></h1>
+        <p class="hero-sub reveal" style="--d:.16s">A <span class="serif-i">UX Designer</span> bases in Bangkok.</p>
+        <p class="hero-desc reveal" style="--d:.22s">
+          with about 3 years in Thai fintech and cloud products, 
+          currently designing financial-related services for Paotang Pay,
+          advocating user-centred solutions that are intuitive for users and aligned with business goals.
+        </p>
+        <div class="hero-actions reveal" style="--d:.3s">
+          <a class="btn btn-primary" href="#work">See case studies</a>
+          <a class="btn btn-ghost" href="about-me/">More about me</a>
+        </div>
+      </div>
+      <div class="scroll-cue" aria-hidden="true">SCROLL<span></span></div>
+    </section>
+
+    <!-- Featured work -->
+    <section class="section" id="work">
+      <div class="container">
+        <div class="section-head">
+          <div class="section-copy reveal">
+            <span class="eyebrow">Selected work</span>
+            <h2 class="section-title">Featured <span class="serif-i">Case Studies</span></h2>
+            <p class="section-lead">A selection of projects I've worked on, from first research questions to tested prototypes.</p>
+          </div>
+          <a class="btn btn-ghost btn-sm reveal" href="ux-playground/">View all <svg class="arrow arrow-r" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        </div>
+        <div class="bento" id="featured"></div>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="section section-tint">
+      <div class="container">
+        <div class="section-copy reveal">
+            <span class="eyebrow">Numbers that matter</span>
+            <h2 class="section-title">My experience <span class="serif-i">in Numbers</span></h2>
+            <p class="section-lead">Here are some key metrics that showcase my impact and contributions.</p>
+          </div>
+        <div class="stats reveal">
+          <div><div class="stat-num"><sup>~</sup><span data-count="3">0</span></div><div class="stat-label">Years in fintech &amp; cloud UX</div></div>
+          <div><div class="stat-num"><sup>~</sup><span data-count="6">0</span></div><div class="stat-label">Research &amp; design case studies</div></div>
+          <div><div class="stat-num"><span data-count="2">0</span></div><div class="stat-label">Research awards 2026</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Playground teaser -->
+    <section class="playground" id="play">
+      <div class="floaters"></div>
+      <div class="playground-sticky">
+        <div class="reveal">
+          <span class="eyebrow">Explorations</span>
+          <h2 class="section-title">UX <span class="serif-i">playground</span></h2>
+          <p class="section-lead">Every project, research study and side exploration, all in one place.</p>
+          <!-- <a class="btn btn-primary" href="ux-playground/">View all projects <svg class="arrow arrow-r" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a> -->
+          <!-- the line above is preserved for future use and to avoide the redundant link of view all-->
+        </div>
+      </div>
+    </section>
+
+    <div data-footer></div>
+  </main>
+
+  <script src="assets/js/data.js"></script>
+  <script src="assets/js/site.js"></script>
+  <script>
+    renderFeatured(document.getElementById("featured"));
+    renderFloaters(document.getElementById("play"), GALLERY);
+  </script>
+</body>
+</html>

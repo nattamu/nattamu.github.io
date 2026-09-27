@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UX Playground · Nattaporn Muhpayak</title>
+  <meta name="description" content="All UX research and design projects by Nattaporn Muhpayak." />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body data-page="playground" data-root="../">
+  <main id="main">
+    <header class="container page-hero">
+      <span class="eyebrow reveal">All projects</span>
+      <h1 class="reveal" style="--d:.08s">UX <span class="serif-i">playground</span></h1>
+      <p class="reveal" style="--d:.16s">
+        Research studies, product concepts and work in progress. Each one starts with people and a real problem,
+        and most end with a prototype someone has actually tested.
+      </p>
+    </header>
+
+    <section class="container section-end">
+      <div class="filters reveal" role="group" aria-label="Filter projects" id="filters"></div>
+      <div class="grid-projects" id="projects" aria-live="polite"></div>
+    </section>
+
+    <section class="playground" id="play">
+      <div class="floaters"></div>
+      <div class="playground-sticky">
+        <div class="reveal">
+          <span class="eyebrow">Beyond UX</span>
+          <h2 class="section-title">Other <span class="serif-i">design work</span></h2>
+          <p class="section-lead">Industrial design, visual pieces and craft from my B.Arch years and after.</p>
+        </div>
+      </div>
+    </section>
+
+    <div data-footer></div>
+  </main>
+
+  <script src="../assets/js/data.js"></script>
+  <script src="../assets/js/site.js"></script>
+  <script>
+    const FILTERS = [
+      ["all", "All"],
+      ["research", "UX Research"],
+      ["product", "Product Design"],
+      ["in-progress", "In progress"],
+    ];
+    const count = (id) =>
+      PROJECTS.filter((p) => id === "all" || p.category === id || (id === "in-progress" && p.status === "in-progress")).length;
+
+    const filtersEl = document.getElementById("filters");
+    const grid = document.getElementById("projects");
+    filtersEl.innerHTML = FILTERS.map(
+      ([id, label], i) =>
+        `<button class="filter" type="button" data-f="${id}" aria-pressed="${i === 0}">${label}<span class="count">${count(id)}</span></button>`
+    ).join("");
+
+    filtersEl.addEventListener("click", (e) => {
+      const b = e.target.closest(".filter");
+      if (!b) return;
+      filtersEl.querySelectorAll(".filter").forEach((x) => x.setAttribute("aria-pressed", x === b));
+      renderProjectGrid(grid, b.dataset.f);
+    });
+
+    renderProjectGrid(grid, "all");
+    renderFloaters(document.getElementById("play"), GALLERY);
+  </script>
+</body>
+</html>

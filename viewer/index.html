@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Image viewer · Nattaporn Muhpayak</title>
+  <meta name="robots" content="noindex" />
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../assets/css/style.css" />
+  <style>
+    /* Full-screen zoom/pan viewer for large diagrams.
+       Usage: /viewer/?src=<path from site root>&title=<caption>
+       e.g.   /viewer/?src=ux-playground/ckd-care/img/To-be%20Journey%20Map.svg&title=To-be%20journey%20map */
+    html, body { height: 100%; }
+    body { overflow: hidden; background: var(--surface); touch-action: none; }
+
+    .vw-bar {
+      position: fixed;
+      top: var(--nav-top);
+      left: var(--page-margin);
+      right: var(--page-margin);
+      z-index: 2;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(13, 23, 38, 0.08);
+      box-shadow: 0 10px 30px -12px rgba(13, 23, 38, 0.18);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+    }
+    .vw-title {
+      flex: 1;
+      min-width: 0;
+      padding: 0 8px;
+      font-size: 14px;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .vw-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-width: var(--tap);
+      height: var(--tap);
+      padding: 0 12px;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--ink);
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .vw-btn:hover { background: var(--surface); color: var(--accent); }
+    .vw-zoom { min-width: 52px; font-variant-numeric: tabular-nums; font-size: 13px; color: var(--muted); text-align: center; }
+    .vw-hide-sm { display: none; }
+    @media (min-width: 768px) { .vw-hide-sm { display: inline-flex; } }
+
+    .vw-stage { position: fixed; inset: 0; overflow: hidden; cursor: grab; }
+    .vw-stage.dragging { cursor: grabbing; }
+    /* Size is set via width (not a scale transform) so the SVG re-renders sharply at every zoom. */
+    .vw-img {
+      position: absolute;
+      top: 0;
+      left: 0;
+      max-width: none;
+      height: auto;
+      transform-origin: 0 0;
+      user-select: none;
+      -webkit-user-drag: none;
+      background: #fff;
+      box-shadow: 0 10px 40px -16px rgba(13, 23, 38, 0.25);
+    }
+    .vw-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(13, 23, 38, 0.8);
+      color: #fff;
+      font-size: 13px;
+      white-space: nowrap;
+      pointer-events: none;
+      transition: opacity 0.4s;
+    }
+    .vw-status { position: fixed; inset: 0; display: grid; place-items: center; color: var(--muted); font-size: 15px; }
+  </style>
+</head>
+<body>
+  <div class="vw-bar" role="toolbar" aria-label="Image viewer controls">
+    <a class="vw-btn" id="vw-back" href="../" aria-label="Back">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+    </a>
+    <span class="vw-title" id="vw-title">Image viewer</span>
+    <button class="vw-btn" id="vw-out" type="button" aria-label="Zoom out">−</button>
+    <span class="vw-zoom vw-hide-sm" id="vw-zoom" aria-live="polite">–</span>
+    <button class="vw-btn" id="vw-in" type="button" aria-label="Zoom in">+</button>
+    <button class="vw-btn" id="vw-fit" type="button">Fit</button>
+  </div>
+
+  <main class="vw-stage" id="vw-stage">
+    <p class="vw-status" id="vw-status">Loading…</p>
+  </main>
+  <p class="vw-hint" id="vw-hint">Scroll or pinch to zoom · drag to move</p>
+
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const src = params.get("src") || "";
+      const title = params.get("title") || "Image";
+      const stage = document.getElementById("vw-stage");
+      const status = document.getElementById("vw-status");
+      const zoomLabel = document.getElementById("vw-zoom");
+      const hint = document.getElementById("vw-hint");
+      const back = document.getElementById("vw-back");
+
+      document.getElementById("vw-title").textContent = title;
+      document.title = title + " · Nattaporn Muhpayak";
+
+      // Back returns to the page that opened the viewer when there is one.
+      if (document.referrer && new URL(document.referrer).origin === location.origin) back.href = document.referrer;
+
+      // Only same-site images, given as a path from the site root.
+      const safe = /^[\w\-./% ()]+\.(svg|png|jpe?g|webp)$/i.test(src) && !src.includes("..") && !src.startsWith("/");
+      if (!safe) { status.textContent = "This image can't be opened."; return; }
+
+      const img = new Image();
+      img.className = "vw-img";
+      img.alt = title;
+      img.draggable = false;
+      img.src = "../" + src;
+
+      let natW = 0, natH = 0;   // image size in its own pixels
+      let scale = 1, x = 0, y = 0;
+      let fitScale = 1;
+      const MAX = 1.5;          // up to 150% of the image's own size
+
+      function apply() {
+        img.style.width = natW * scale + "px";
+        img.style.transform = `translate(${x}px, ${y}px)`;
+        zoomLabel.textContent = Math.round((scale / fitScale) * 100) + "%";
+      }
+      function fit() {
+        const pad = 24, top = 76;
+        const w = innerWidth - pad * 2, h = innerHeight - top - pad;
+        fitScale = Math.min(w / natW, h / natH);
+        scale = fitScale;
+        x = (innerWidth - natW * scale) / 2;
+        y = top + (h - natH * scale) / 2;
+        apply();
+      }
+      function zoomAt(factor, cx, cy) {
+        const next = Math.min(MAX, Math.max(fitScale * 0.5, scale * factor));
+        const k = next / scale;
+        x = cx - (cx - x) * k;
+        y = cy - (cy - y) * k;
+        scale = next;
+        apply();
+      }
+
+      img.onload = function () {
+        natW = img.naturalWidth || 1600;
+        natH = img.naturalHeight || 900;
+        status.remove();
+        stage.appendChild(img);
+        fit();
+        setTimeout(() => (hint.style.opacity = "0"), 3500);
+      };
+      img.onerror = function () { status.textContent = "Couldn't load the image."; };
+
+      // Wheel / trackpad: zoom around the pointer
+      stage.addEventListener("wheel", (e) => {
+        e.preventDefault();
+        zoomAt(Math.exp(-e.deltaY * (e.ctrlKey ? 0.01 : 0.0015)), e.clientX, e.clientY);
+      }, { passive: false });
+
+      // Drag to pan, pinch to zoom (pointer events cover mouse, pen and touch)
+      const pts = new Map();
+      let last = null, lastDist = 0;
+      stage.addEventListener("pointerdown", (e) => {
+        stage.setPointerCapture(e.pointerId);
+        pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        stage.classList.add("dragging");
+        last = { x: e.clientX, y: e.clientY };
+        if (pts.size === 2) { const [a, b] = [...pts.values()]; lastDist = Math.hypot(a.x - b.x, a.y - b.y); }
+      });
+      stage.addEventListener("pointermove", (e) => {
+        if (!pts.has(e.pointerId)) return;
+        pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        if (pts.size === 2) {
+          const [a, b] = [...pts.values()];
+          const dist = Math.hypot(a.x - b.x, a.y - b.y);
+          if (lastDist) zoomAt(dist / lastDist, (a.x + b.x) / 2, (a.y + b.y) / 2);
+          lastDist = dist;
+        } else if (last) {
+          x += e.clientX - last.x;
+          y += e.clientY - last.y;
+          last = { x: e.clientX, y: e.clientY };
+          apply();
+        }
+      });
+      function end(e) {
+        pts.delete(e.pointerId);
+        if (pts.size < 2) lastDist = 0;
+        if (pts.size === 1) { const [p] = pts.values(); last = { ...p }; }
+        if (!pts.size) { last = null; stage.classList.remove("dragging"); }
+      }
+      stage.addEventListener("pointerup", end);
+      stage.addEventListener("pointercancel", end);
+      stage.addEventListener("dblclick", (e) => zoomAt(2, e.clientX, e.clientY));
+
+      const center = () => [innerWidth / 2, innerHeight / 2];
+      document.getElementById("vw-in").onclick = () => zoomAt(1.5, ...center());
+      document.getElementById("vw-out").onclick = () => zoomAt(1 / 1.5, ...center());
+      document.getElementById("vw-fit").onclick = fit;
+      addEventListener("keydown", (e) => {
+        if (e.key === "+" || e.key === "=") zoomAt(1.5, ...center());
+        else if (e.key === "-") zoomAt(1 / 1.5, ...center());
+        else if (e.key === "0") fit();
+        else if (e.key.startsWith("Arrow")) {
+          const d = 80;
+          if (e.key === "ArrowLeft") x += d; if (e.key === "ArrowRight") x -= d;
+          if (e.key === "ArrowUp") y += d; if (e.key === "ArrowDown") y -= d;
+          apply();
+        } else if (e.key === "Escape") location.href = back.href;
+      });
+      addEventListener("resize", () => { if (natW) fit(); });
+    })();
+  </script>
+</body>
+</html>

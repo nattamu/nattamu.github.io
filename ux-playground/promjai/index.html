@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Promjai: CKD Care in the Family Chat · Nattaporn Muhpayak</title>
+  <meta name="description" content="Promjai is a LINE chatbot that joins a family's existing group chat, keeping everyone involved in a CKD patient's care informed and prepared, from diagnosis to the treatment decision." />
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..700;1,9..144,300..700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../../assets/css/style.css" />
+  <style>
+    /* Page-specific: Promjai across the to-be journey */
+    .pj-journey { margin: calc(var(--gutter) * 1.5) 0; display: grid; gap: 12px; }
+    @media (min-width: 900px) { .pj-journey { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    .pj-stage { border: 1px solid var(--line); border-radius: var(--radius-sm); background: var(--bg); overflow: hidden; display: flex; flex-direction: column; }
+    .pj-stage-head { padding: 14px 16px; background: var(--surface); border-bottom: 1px solid var(--line); }
+    .pj-stage-head .pj-kicker { display: block; font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+    .pj-stage-head strong { display: block; margin-top: 4px; font-size: 17px; color: var(--ink); }
+    .pj-stage-head .pj-egfr { display: block; margin-top: 2px; font-size: 13px; color: var(--muted); }
+    .pj-steps { list-style: none; margin: 0; padding: 8px 16px 16px; display: grid; gap: 0; }
+    .cs-body .pj-steps li { padding: 12px 0 0; border-top: 1px dashed var(--line); }
+    .cs-body .pj-steps li:first-child { border-top: 0; }
+    .cs-body .pj-steps li::before { display: none; }
+    .pj-step { display: block; font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: var(--ink); }
+    .pj-touch { display: block; margin-top: 6px; padding: 8px 10px; border-radius: 10px; background: var(--accent-soft); color: var(--accent-ink); font-size: 14px; line-height: 1.5; }
+    .pj-touch + .pj-touch { margin-top: 6px; }
+    .pj-quiet { display: block; margin-top: 6px; font-size: 14px; line-height: 1.5; color: var(--muted); }
+    .pj-legend { font-size: 14px; color: var(--muted); }
+    .pj-legend span { display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: var(--accent-soft); border: 1px solid var(--accent); vertical-align: -1px; margin-right: 6px; }
+  </style>
+</head>
+<body data-page="playground" data-root="../../" data-project="promjai">
+  <main id="main" class="cs-page">
+    <header class="container cs-intro">
+      <a class="cs-back reveal" href="../../ux-playground/"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg> UX Playground</a>
+      <p class="cs-label reveal">Case <span class="serif-i">study.</span></p>
+      <figure class="cs-banner reveal" style="--d:.08s"><img src="img/banner.webp" alt="Tilted Promjai chat screens in a family LINE group: appointment reminders and rescheduling, treatment summaries with eGFR results, an alert when kidney function drops, and a shortcut to chat with the care team" /></figure>
+      <div class="cs-head">
+        <h1 class="cs-title reveal">Promjai: CKD Care in the Family Chat</h1>
+        <p class="cs-date reveal"><time>2025–2026</time> · Policy proposal from TDRI's research on preventing unplanned dialysis</p>
+        <div class="cs-summary reveal">
+          <p class="cs-tagline">Bringing families into kidney care, right where they already talk</p>
+          <p>Promjai is a LINE chatbot that joins a family's existing group chat, keeping everyone involved in a CKD patient's care informed and prepared, from diagnosis to the treatment-decision appointment. It was the first of eight policy proposals from our research on preventing unplanned dialysis in Thailand.</p>
+          <ul class="p-tags"><li>Service Design</li><li>Conversational UX</li><li>Healthcare</li><li>Family-Centred Care</li><li>LINE Chatbot</li></ul>
+        </div>
+        <div class="cs-role reveal" style="--d:.08s">
+          <h2>My role</h2>
+          <p>Product Designer</p>
+        </div>
+        <div class="cs-resp reveal" style="--d:.14s">
+          <h2>My responsibility</h2>
+          <ul><li>Concept &amp; service logic</li><li>Journey touchpoints</li><li>Conversation flows</li><li>Chat UI</li></ul>
+        </div>
+      </div>
+    </header>
+    <div class="container section-end">
+      <div class="cs-layout">
+        <nav class="cs-toc" aria-label="On this page">
+          <p>On this page</p>
+          <ol>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#why-families">Why families</a></li>
+            <li><a href="#principles">Design principles</a></li>
+            <li><a href="#journey">Promjai across the journey</a></li>
+            <li><a href="#moments">Key moments</a></li>
+            <li><a href="#tensions">Design tensions</a></li>
+            <li><a href="#reflection">Reflection</a></li>
+          </ol>
+        </nav>
+        <article class="cs-body">
+          <section class="cs-section" aria-labelledby="overview">
+            <h2 id="overview">Overview</h2>
+            <p>In Thailand, 45.4% of dialysis patients under the Universal Coverage Scheme start dialysis unplanned. Our TDRI research traced this to delays in the system and delays in patients' own decisions, and found that families — who shape many of those decisions — are largely left out of the information loop. <a href="../ckd-care/">View this Case Study →</a></p>
+            <p>Promjai responds to that gap. Its name comes from the Thai word <strong>พร้อมใจ</strong> — roughly "ready, and of one heart" — which is what the service tries to create: a family that is informed together and prepared together, well before a crisis.</p>
+            <figure class="cs-figure"><img src="img/cover.jpg" alt="Promjai overview: two main chat screens inside a family LINE group, alongside screens for diet tips, appointment alerts, a family poll and a chat with the care team" loading="lazy" decoding="async" /><figcaption>Figure 1: Promjai, the care-coordination chatbot for CKD patients, families and care teams.</figcaption></figure>
+          </section>
+
+          <section class="cs-section" aria-labelledby="why-families">
+            <h2 id="why-families">Why families</h2>
+            <p>Stakeholder mapping in our research showed that <strong>families play a major role in care and treatment decisions, yet receive little treatment information</strong> — especially early in the disease, when they are not the primary carer. The problem tree echoed this: relatives who don't cooperate with the care plan, and patients who can't reach a decision, were both on the path to unplanned dialysis.</p>
+            <div class="cs-pair">
+              <figure class="cs-figure"><img src="img/stakeholder-map.webp" alt="Stakeholder map in concentric rings, with relatives and the patient highlighted together at the centre, surrounded by carers, friends, nephrologists and nurses, then hospitals, community groups and government bodies further out" loading="lazy" decoding="async" /><figcaption>Figure 2: Stakeholder map. Relatives (ญาติ) sit in the innermost ring, right beside the patient.</figcaption></figure>
+              <figure class="cs-figure"><img src="img/tension-map.webp" alt="Tension map bubble chart: rows are five issue areas, columns are stakeholder roles; teal bubbles show the share of each role seeing an issue as a support, orange as a limitation. The patient and researcher/policymaker columns and the policy and information rows are highlighted" loading="lazy" decoding="async" /><figcaption>Figure 3: Tension map. Teal shows how many in each role saw an issue as a support, orange as a limitation. The highlight marks how patients and researchers/policymakers see policy, information and communication.</figcaption></figure>
+            </div>
+            <figure class="cs-figure"><img src="img/problem-tree.webp" alt="Problem tree flowing from root causes on the left, through delayed entry into care and delayed treatment, to unplanned kidney replacement therapy and its consequences on the right. Six causes are highlighted, including relatives not cooperating" loading="lazy" decoding="async" /><figcaption>Figure 4: Problem tree. Highlighted causes include limited or incorrect knowledge about kidney disease, misunderstanding of KRT/PD, relatives not cooperating, unclear CKD/NCD policy communication, skipped annual check-ups and no early CKD care plan.</figcaption></figure>
+            <p>The pattern is familiar in clinical settings as the "Daughter from California" problem: a relative who lives far away arrives late in the illness and pushes for high-stakes treatment without the context the rest of the family has built up. The fix isn't to keep relatives out — it's to bring them in early, with the same information, at the same time.</p>
+          </section>
+
+          <section class="cs-section" aria-labelledby="principles">
+            <h2 id="principles">Design principles</h2>
+            <h3 class="cs-point"><span class="cs-num">01</span>Go to users — don't make them come to us</h3>
+            <p>No new app to download or learn. Promjai joins the LINE group the family already uses every day.</p>
+            <h3 class="cs-point"><span class="cs-num">02</span>Design for the family, not only the patient</h3>
+            <p>Treatment information has to reach everyone with a role in care — not just whoever happens to be sitting in the consultation room.</p>
+            <h3 class="cs-point"><span class="cs-num">03</span>Build on what already exists</h3>
+            <p>Promjai links to Mor Prom (หมอพร้อม), the government's health platform, and to existing hospital systems, rather than duplicating records or creating another channel for clinicians to maintain.</p>
+          </section>
+
+          <section class="cs-section" aria-labelledby="journey">
+            <h2 id="journey">Promjai across the journey</h2>
+            <p>Our to-be service blueprint follows the patient through three stages. Promjai isn't a feature that lives in one of them — it is a thread that runs through all three, stepping in at the moments where the as-is journey showed families dropping out of the loop.</p>
+            <p class="pj-legend"><span aria-hidden="true"></span>Where Promjai steps in</p>
+            <div class="pj-journey" role="list">
+              <div class="pj-stage" role="listitem">
+                <div class="pj-stage-head"><span class="pj-kicker">Stage 1</span><strong>Diagnosis</strong><span class="pj-egfr">Diagnosed with CKD</span></div>
+                <ul class="pj-steps">
+                  <li><span class="pj-step">Diagnosed as CKD</span><span class="pj-quiet">Nurse introduces Mor Prom and Promjai to the patient and primary carer.</span></li>
+                  <li><span class="pj-step">Service onboarding</span><span class="pj-touch">Patient invites Promjai into the family LINE group; each member picks their role.</span><span class="pj-touch">Each member can set what they're notified about in a private chat.</span></li>
+                </ul>
+              </div>
+              <div class="pj-stage" role="listitem">
+                <div class="pj-stage-head"><span class="pj-kicker">Stage 2</span><strong>Conservative care</strong><span class="pj-egfr">Slowing decline, regular follow-up</span></div>
+                <ul class="pj-steps">
+                  <li><span class="pj-step">Conservative care</span><span class="pj-touch">Visit summaries sent to the whole family, including relatives who live far away.</span></li>
+                  <li><span class="pj-step">Seeking alternatives</span><span class="pj-touch">Plain-language answers to everyday questions — diet, what eGFR means — plus stage-appropriate learning content.</span></li>
+                  <li><span class="pj-step">Follow-up</span><span class="pj-touch">Reminders two days ahead, with preparation instructions; family confirms who's coming.</span><span class="pj-touch">Missed appointments are followed up and rebooked.</span></li>
+                </ul>
+              </div>
+              <div class="pj-stage" role="listitem">
+                <div class="pj-stage-head"><span class="pj-kicker">Stage 3</span><strong>Shared decision-making</strong><span class="pj-egfr">Choosing kidney replacement therapy</span></div>
+                <ul class="pj-steps">
+                  <li><span class="pj-step">Trigger</span><span class="pj-touch">When results cross a threshold (e.g. eGFR below 20), the family is alerted with an explanation.</span></li>
+                  <li><span class="pj-step">KRT onboarding</span><span class="pj-touch">Specialist questions are handed to the kidney care team in a direct chat.</span><span class="pj-touch">HD, PD and palliative care options sent a week before the decision appointment.</span></li>
+                  <li><span class="pj-step">Shared decision-making</span><span class="pj-touch">Family shares a preliminary preference, summarised for the care team — explicitly not the final decision.</span></li>
+                  <li><span class="pj-step">Reach decision</span><span class="pj-quiet">Patient, family and clinicians decide together, in the appointment.</span></li>
+                </ul>
+              </div>
+            </div>
+          </section>
+
+          <section class="cs-section" aria-labelledby="moments">
+            <h2 id="moments">Key moments</h2>
+            <p>Each moment below shows the conversation Promjai has with the family, in the Thai LINE screens as designed.</p>
+
+            <h3 class="cs-point"><span class="cs-num">01</span>Onboarding the family</h3>
+            <p>The patient invites Promjai into the family's existing LINE group. Promjai introduces itself as assigned by the hospital's care team, then asks each member to pick their role — patient, spouse, son or daughter, parent, relative or carer — so it knows who it is talking to. In a private chat, each person can view lab results and treatment documents and choose which updates they receive.</p>
+            <figure class="cs-figure cs-phones" style="--n:2"><img src="img/screens/web/01-onboarding-a.jpg" alt="Chat screen: Promjai joins the family LINE group, introduces itself as assigned by the hospital care team and asks each member to choose their role" loading="lazy" decoding="async" /><img src="img/screens/web/01-onboarding-b.jpg" alt="Chat screen: members confirm their roles, and Promjai explains what it will do in the group with cards for treatment updates and appointments" loading="lazy" decoding="async" /><figcaption>Figure 5: The nurse introduces the service; the family sets Promjai up in their own group.</figcaption></figure>
+
+            <h3 class="cs-point"><span class="cs-num">02</span>Appointments, and who's coming</h3>
+            <p>Two days before each appointment, Promjai reminds the family, adds preparation instructions such as fasting before a blood test, and asks who can go with the patient. If an appointment is missed, it follows up and rebooks — addressing the no-show loop we saw repeatedly in the as-is journey.</p>
+            <figure class="cs-figure cs-phones" style="--n:3"><img src="img/screens/web/02-appointments-a.jpg" alt="Chat screen: appointment card with the date, time, clinic, who is accompanying the patient and a map to the hospital" loading="lazy" decoding="async" /><img src="img/screens/web/02-appointments-b.jpg" alt="Chat screen: appointment reminder with going and can&#x27;t-go buttons, and family members replying who will take the patient" loading="lazy" decoding="async" /><img src="img/screens/web/02-appointments-c.jpg" alt="Chat screen: after a missed visit, Promjai shares a new appointment card" loading="lazy" decoding="async" /><figcaption>Figure 6: One member commits to the visit on behalf of the family.</figcaption></figure>
+
+            <h3 class="cs-point"><span class="cs-num">03</span>Treatment updates, for everyone at once</h3>
+            <p>After each visit, a summary of the results — eGFR, stage, next appointment and the doctor's note — goes to the whole group, with a link to view the full results in Mor Prom. When results cross a set threshold, such as eGFR dropping below 20, the update is flagged as needing special attention and explains what it means.</p>
+            <figure class="cs-figure cs-phones" style="--n:4"><img src="img/screens/web/03-treatment-updates-a.jpg" alt="Chat screen: visit summary card showing eGFR, CKD stage 3 and the next appointment, with a link to full results in Mor Prom" loading="lazy" decoding="async" /><img src="img/screens/web/03-treatment-updates-b.jpg" alt="Tele-med screen: the doctor&#x27;s note to the family with a short video explaining the results" loading="lazy" decoding="async" /><img src="img/screens/web/03-treatment-updates-c.jpg" alt="Chat screen: a visit summary flagged as needing special attention, with eGFR dropping to stage 4" loading="lazy" decoding="async" /><img src="img/screens/web/03-treatment-updates-d.jpg" alt="Chat screen: family members who were absent catch up on the update and ask Promjai follow-up questions" loading="lazy" decoding="async" /><figcaption>Figure 7: The relative abroad sees the same update, at the same time, as the family at home.</figcaption></figure>
+
+            <h3 class="cs-point"><span class="cs-num">04</span>Everyday questions, answered now</h3>
+            <p>Between appointments, families have questions they don't want to "bother the doctor" with — what can he eat, what does this number mean. Promjai answers general questions straight away in plain language, shares short learning videos matched to the patient's stage, and points to restaurants with kidney-friendly menus from the NCD restaurant network, another of our proposals.</p>
+            <figure class="cs-figure cs-phones" style="--n:2"><img src="img/screens/web/04-answer-questions-a.jpg" alt="Chat screen: Promjai answers a diet question in plain language and shares photos of kidney-friendly meals from NCD-friendly restaurants" loading="lazy" decoding="async" /><img src="img/screens/web/04-answer-questions-b.jpg" alt="Chat screen: Promjai shares short learning videos matched to the patient&#x27;s CKD stage" loading="lazy" decoding="async" /><figcaption>Figure 8: Back in daily life, questions are answered without waiting for the care team.</figcaption></figure>
+
+            <h3 class="cs-point"><span class="cs-num">05</span>Knowing when to hand over</h3>
+            <p>Promjai keeps a clear boundary between what a bot should answer and what needs a clinician. Questions beyond its scope — including anything that sounds urgent — are passed to a nurse, with a confirmation and an expected response time. For deeper questions, such as dialysis options, it opens a direct chat with the patient's kidney care team, where a specialist can reply.</p>
+            <figure class="cs-figure cs-phones" style="--n:3"><img src="img/screens/web/05-escalate-a.jpg" alt="Chat screen: a family member asks to talk to a doctor or nurse, and Promjai offers to open a chat with the nephrology care team" loading="lazy" decoding="async" /><img src="img/screens/web/05-escalate-b.jpg" alt="Care team chat: the family&#x27;s question about dialysis options is posted to the nephrology care team" loading="lazy" decoding="async" /><img src="img/screens/web/05-escalate-c.jpg" alt="Care team chat: a peritoneal dialysis specialist nurse answers the family&#x27;s question" loading="lazy" decoding="async" /><figcaption>Figure 9: "We're not doctors — will we cause an infection doing this at home?" gets a specialist's answer.</figcaption></figure>
+
+            <h3 class="cs-point"><span class="cs-num">06</span>Preparing for the decision together</h3>
+            <p>A week before the shared decision-making appointment, Promjai sends an overview of the options — haemodialysis, peritoneal dialysis and palliative care without dialysis — so the family has time to understand them. It then asks each member for a preliminary preference and sends a summary to the care team, stating clearly that this is input for the conversation, not the final decision.</p>
+            <figure class="cs-figure cs-phones" style="--n:2"><img src="img/screens/web/06-sdm-b.jpg" alt="Chat screen: before the shared decision-making appointment, Promjai asks the family to share their initial thoughts and members reply with their preferred option" loading="lazy" decoding="async" /><img src="img/screens/web/06-sdm-a.jpg" alt="Chat screen: the family opinion summary Promjai prepares for the care team, showing how many members lean towards each dialysis option" loading="lazy" decoding="async" /><figcaption>Figure 10: Options sent ahead of time, then a preliminary poll for the care team.</figcaption></figure>
+          </section>
+
+          <section class="cs-section" aria-labelledby="tensions">
+            <h2 id="tensions">Design tensions</h2>
+            <!-- DRAFT: these frame the trade-offs from the design; rewrite in your own voice and correct anything that doesn't match your reasoning. -->
+            <h3 class="cs-point"><span class="cs-num">01</span>Shared visibility vs. patient privacy</h3>
+            <p>Putting clinical updates in a group chat is the point of Promjai — and its biggest risk. The design makes the patient the one who invites Promjai in, and gives every member a private chat to control what they receive. An open question for testing is whether patients also need finer control over <em>what the group sees</em>, not only what each member is notified about.</p>
+            <h3 class="cs-point"><span class="cs-num">02</span>Instant answers vs. clinical safety</h3>
+            <p>Answering general questions immediately reduces anxiety and keeps families from searching alone. But a bot must not drift into clinical advice. Promjai answers general knowledge only, hands anything beyond that to a nurse with a stated response time, and routes specialist questions to the care team.</p>
+            <h3 class="cs-point"><span class="cs-num">03</span>Family input vs. the patient's own choice</h3>
+            <p>The pre-appointment poll helps clinicians understand where the family stands before shared decision-making begins. It could also make family pressure more visible to the patient. The poll is framed explicitly as input, not a decision, and the choice itself stays in the appointment — but this is the moment I would most want to test with patients.</p>
+          </section>
+
+          <section class="cs-section" aria-labelledby="reflection">
+            <h2 id="reflection">Reflection</h2>
+            <!-- DRAFT: replace with your own reflection. -->
+            <p>Promjai grew out of a research insight rather than a feature idea, and each design decision traces back to a point in the journey where families dropped out of the loop. As a policy-stage concept, it has not yet been built or validated with users. While the proposal awaits uptake by health agencies, the next step is to develop a working prototype independently and run small-scale usability tests with families — to learn how they use it in practice, and how the privacy and shared decision-making tensions play out.</p>
+          </section>
+        </article>
+      </div>
+    </div>
+    <section class="container cs-more">
+      <div class="section-head">
+        <h2 class="section-title">More <span class="serif-i">case studies</span></h2>
+        <a class="btn btn-ghost btn-sm" href="../../ux-playground/">View all <svg class="arrow arrow-r" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="story-grid" id="more"></div>
+    </section>
+    <div data-footer></div>
+  </main>
+  <script src="../../assets/js/data.js"></script>
+  <script src="../../assets/js/site.js"></script>
+  <script>
+    renderStories(document.getElementById("more"), "promjai", 2);
+  </script>
+</body>
+</html>

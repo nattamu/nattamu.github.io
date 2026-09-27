@@ -1,0 +1,14 @@
+# Local tooling (not part of the website)
+.claude/
+.vscode/
+serve.py
+.DS_Store
+
+# Large files: the proposal PDF is shared via Google Drive instead
+# (GitHub rejects files over 100 MB)
+ux-playground/ckd-care/pdf/
+
+# Original screen exports: the site uses the resized copies in screens/web/
+ux-playground/promjai/img/screens/*.png
+ux-playground/promjai/img/LINE.png
+ux-playground/promjai/img/LINE-1.png
